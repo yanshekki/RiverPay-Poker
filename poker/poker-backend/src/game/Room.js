@@ -369,6 +369,53 @@ class Room {
             })
         };
     }
+
+    // Serialize full state for crash recovery
+    serialize() {
+        return {
+            state: this.state,
+            pot: this.pot,
+            communityCards: this.communityCards,
+            dealerIndex: this.dealerIndex,
+            currentPlayerTurn: this.currentPlayerTurn,
+            currentHighestBet: this.currentHighestBet,
+            minRaise: this.minRaise,
+            playersActedThisRound: this.playersActedThisRound,
+            turnEndTime: this.turnEndTime,
+            players: this.players.map(p => p ? {
+                address: p.address,
+                chips: p.chips,
+                bet: p.bet,
+                totalInvested: p.totalInvested,
+                hand: p.hand,
+                isFolded: p.isFolded,
+                isAllIn: p.isAllIn,
+                lastAction: p.lastAction,
+            } : null),
+        };
+    }
+
+    restore(data, socketMap) {
+        this.state = data.state;
+        this.pot = data.pot;
+        this.communityCards = data.communityCards;
+        this.dealerIndex = data.dealerIndex;
+        this.currentPlayerTurn = data.currentPlayerTurn;
+        this.currentHighestBet = data.currentHighestBet;
+        this.minRaise = data.minRaise;
+        this.playersActedThisRound = data.playersActedThisRound;
+        this.turnEndTime = 0; // Reset timer on restore
+        this.players = data.players.map(p => {
+            if (!p) return null;
+            return {
+                ...p,
+                socketId: socketMap[p.address] || '',
+            };
+        });
+        if (this.state !== 'WAITING' && this.currentPlayerTurn >= 0) {
+            this.startTurnTimer();
+        }
+    }
 }
 
 module.exports = Room;

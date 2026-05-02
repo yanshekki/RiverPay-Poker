@@ -194,6 +194,9 @@ io.on('connection', async (socket) => {
 
     // ─── playerDeposited ───
     socket.on('playerDeposited', validateEvent(dto.playerDepositedSchema, async ({ roomId, amount, txHash }) => {
+        // Rate limit: max 3 deposits per 10 seconds per user
+        const allowed = await redisService.checkRateLimit(`deposit:${socket.user.userId}`, 3, 10);
+        if (!allowed) return socket.emit('errorMsg', 'Too many deposit attempts. Please wait.');
         const room = rooms.get(roomId);
         const contractAddress = roomContracts.get(roomId);
         if (!room || !contractAddress) return;
@@ -227,6 +230,9 @@ io.on('connection', async (socket) => {
 
     // ─── playerAction ───
     socket.on('playerAction', validateEvent(dto.playerActionSchema, async ({ roomId, action, amount }) => {
+        // Rate limit: max 5 actions per second per user
+        const allowed = await redisService.checkRateLimit(`action:${socket.user.userId}`, 5, 1);
+        if (!allowed) return;
         const room = rooms.get(roomId);
         if (room && room.handleAction(socket.id, action, amount)) broadcastGameState(roomId);
     }));
@@ -278,6 +284,8 @@ async function broadcastGameState(roomId) {
     io.in(roomId).fetchSockets().then(async (sockets) => {
         sockets.forEach((socket) => socket.emit('gameStateUpdate', room.getGameStateFor(socket.id)));
         try { await redisService.cacheGameState(roomId, { playerCount: room.getActivePlayers().length, state: room.state, pot: room.pot }); } catch (e) {}
+        // Persist FULL game state for crash recovery (cards, bets, hands)
+        try { await redisService.cacheFullGameState(roomId, room.serialize()); } catch (e) {}
         // Persist chip balances for restart recovery
         try {
             const chipData = {};

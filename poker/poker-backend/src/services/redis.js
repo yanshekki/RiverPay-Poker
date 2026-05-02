@@ -103,6 +103,20 @@ async function deleteChipBalances(roomId) {
   await redis.del(`chips:${roomId}`);
 }
 
+// Full game state persistence (survive server crash)
+async function cacheFullGameState(roomId, fullState) {
+  await redis.set(`fullgame:${roomId}`, JSON.stringify(fullState), 'EX', 3600);
+}
+
+async function getFullGameState(roomId) {
+  const data = await redis.get(`fullgame:${roomId}`);
+  return data ? JSON.parse(data) : null;
+}
+
+async function deleteFullGameState(roomId) {
+  await redis.del(`fullgame:${roomId}`);
+}
+
 // ==========================================
 // 6. Active Games Tracking
 // ==========================================
@@ -138,4 +152,7 @@ module.exports = {
   cacheChipBalances,
   getChipBalances,
   deleteChipBalances,
+  cacheFullGameState,
+  getFullGameState,
+  deleteFullGameState,
 };
