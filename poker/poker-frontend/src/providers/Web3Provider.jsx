@@ -8,8 +8,9 @@ const queryClient = new QueryClient();
 
 export const wagmiConfig = createConfig({
   chains: [avalanche],
+  multiInjectedProviderDiscovery: true,
   connectors: [
-    injected({ target: 'metaMask' }),
+    injected(),
     walletConnect({
       projectId: CONFIG.WALLET_CONNECT_PROJECT_ID,
       metadata: {
