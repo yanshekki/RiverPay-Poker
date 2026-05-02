@@ -38,7 +38,8 @@ export default function GameRoom() {
   const { address } = useAccount();
   const spawnConfetti = useConfetti();
   const { roomContract, errorMsg, setErrorMsg, emit } = useGameSocket(roomId, token);
-  const { isRecording, startRecording, stopRecording } = useVoiceChat(roomId);
+  // Voice chat receiver (side-effect: socket listener)
+  useVoiceChat();
 
   const [isDepositing, setIsDepositing] = useState(false);
   const [isCashingOut, setIsCashingOut] = useState(false);
