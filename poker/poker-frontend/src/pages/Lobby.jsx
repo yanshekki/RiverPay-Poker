@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import {
-  useAccount, useDisconnect, useSignMessage, useSwitchChain
-} from 'wagmi';
+import { useAccount, useDisconnect, useSignMessage, useSwitchChain } from 'wagmi';
 import { avalanche } from 'wagmi/chains';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { ShieldCheck, LogOut, Pickaxe, Zap } from 'lucide-react';
@@ -14,12 +12,10 @@ import { CONFIG } from '../config';
 import { useStore } from '../store/useStore';
 import ContractData from '../ContractData.json';
 import SuitParticles from '../components/ui/SuitParticles';
-import WalletModal from '../components/lobby/WalletModal';
 import SettingsModal from '../components/lobby/SettingsModal';
 import RoomList from '../components/lobby/RoomList';
 import LoginButton from '../components/lobby/LoginButton';
 import LanguageSwitcher from '../components/language/LanguageSwitcher';
-
 
 export default function Lobby() {
   const navigate = useNavigate();
@@ -35,17 +31,16 @@ export default function Lobby() {
   const [loadingText, setLoadingText] = useState('');
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const [myRooms, setMyRooms] = useState({ active: [], completed: [] });
-  const [showWalletModal, setShowWalletModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [roomSettings, setRoomSettings] = useState({
-    maxPlayers: 8, smallBlind: 10, bigBlind: 20, turnTimer: 15
+    maxPlayers: 8, smallBlind: 10, bigBlind: 20, turnTimer: 15,
   });
 
   // Fetch room history
   useEffect(() => {
     if (!token) return;
     fetch(`${CONFIG.API_URL}/api/my-rooms`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     }).then(r => r.ok ? r.json() : []).then(data => {
       setMyRooms({
         active: data.filter(r => r.status === 'WAITING' || r.status === 'PLAYING'),
@@ -60,11 +55,11 @@ export default function Lobby() {
   }, [isConnected, token, logout]);
 
   const doLogin = async () => {
-    if (!isConnected) { setShowWalletModal(true); return; }
+    if (!isConnected) { openWeb3Modal(); return; }
     try {
       setIsLoggingIn(true);
       setLoadingText('正在切換至 Avalanche 網路...');
-      try { await switchChain({ chainId: avalanche.id }); } catch (e) { console.error('Network switch failed:', e); setIsLoggingIn(false); return; }
+      try { await switchChain({ chainId: avalanche.id }); } catch (e) { console.error('Network switch:', e); setIsLoggingIn(false); return; }
 
       setLoadingText('向伺服器請求安全授權碼...');
       const walletAddr = address.toLowerCase();
@@ -88,9 +83,8 @@ export default function Lobby() {
     } catch (error) {
       console.error('登入失敗:', error);
       alert(error.message?.includes('rejected') ? t('errors.signRejected') : t('errors.loginFailed'));
-    } finally { setIsLoggingIn(false); setShowWalletModal(false); }
+    } finally { setIsLoggingIn(false); }
   };
-
 
   const createRoom = async () => {
     if (!isConnected) return alert(t('lobby.connectWallet'));
@@ -126,13 +120,10 @@ export default function Lobby() {
   return (
     <div className="min-h-dvh bg-[#0a0a0a] flex flex-col items-center justify-center text-white relative overflow-hidden">
       <SuitParticles count={15} />
+      <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-[#00B4D8]/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-96 h-96 bg-[#023E8A]/10 rounded-full blur-[120px]" />
+      <div className="absolute top-[40%] left-[50%] w-64 h-64 bg-[#00B4D8]/5 rounded-full blur-[80px]" />
 
-      {/* Background glow orbs */}
-      <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-fuchsia-500/10 rounded-full blur-[120px]" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-96 h-96 bg-cyan-400/10 rounded-full blur-[120px]" />
-      <div className="absolute top-[40%] left-[50%] w-64 h-64 bg-rp-cyan/5 rounded-full blur-[80px]" />
-
-      {/* Main card */}
       <motion.div
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -142,16 +133,16 @@ export default function Lobby() {
         <div className="flex flex-col items-center w-full">
           <div className="flex items-center gap-2 mb-2">
             <motion.div animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}>
-              <ShieldCheck size={64} className="text-rp-cyan" />
+              <img src="/logo.svg" alt="RiverPay" className="w-16 h-16" />
             </motion.div>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-center">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rp-cyan via-rp-light to-rp-cyan">{t('lobby.title')}</span>{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00B4D8] via-[#90E0EF] to-[#00B4D8]">{t('lobby.title')}</span>{' '}
             <span className="text-white">{t('lobby.subtitle')}</span>
           </h1>
           <LanguageSwitcher position="relative" size={18} />
         </div>
-        <p className="text-neutral-500 mb-8 text-center text-sm flex items-center gap-1">
+        <p className="text-neutral-500 mb-8 text-center text-sm flex items-center gap-1 mt-1">
           <Zap size={14} className="text-rp-cyan" /> {t('lobby.description')}
         </p>
 
@@ -169,10 +160,10 @@ export default function Lobby() {
                   </span>
                 </motion.div>
                 <LoginButton isConnected={isConnected} isLoggingIn={isLoggingIn} loadingText={loadingText}
-                  onConnect={() => setShowWalletModal(true)} onLogin={doLogin} onDisconnect={disconnect} />
+                  onConnect={() => openWeb3Modal()} onLogin={doLogin} onDisconnect={disconnect} />
               </div>
             ) : (
-              <LoginButton isConnected={false} onConnect={() => setShowWalletModal(true)} />
+              <LoginButton isConnected={false} onConnect={() => openWeb3Modal()} />
             )}
           </>
         ) : (
@@ -195,7 +186,7 @@ export default function Lobby() {
 
             <motion.button whileHover={{ scale: 1.02 }}
               onClick={handleLogout}
-              className="flex items-center gap-2 text-neutral-500 hover:text-rose-400 transition-colors text-sm mb-6 touch-target">
+              className="flex items-center gap-2 text-neutral-500 hover:text-rp-light transition-colors text-sm mb-6 touch-target">
               <LogOut size={16} /> {t('lobby.logout')}
             </motion.button>
 
@@ -207,7 +198,6 @@ export default function Lobby() {
 
       <p className="z-10 text-neutral-700 text-xs mt-6">{t('app.footer')}</p>
 
-      <WalletModal show={showWalletModal} onClose={() => setShowWalletModal(false)} />
       <SettingsModal show={showSettingsModal} onClose={() => setShowSettingsModal(false)}
         settings={roomSettings} onChange={(patch) => setRoomSettings(s => ({ ...s, ...patch }))}
         onCreate={createRoom} isCreating={isCreatingRoom} />
