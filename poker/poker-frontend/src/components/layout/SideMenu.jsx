@@ -1,10 +1,21 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X } from 'lucide-react';
+import { X, ExternalLink, Share2 } from 'lucide-react';
 
 export default function SideMenu({ show, onClose, roomId, gameState, roomContract, players, walletAddress }) {
   const { t } = useTranslation();
+
+  const handleShare = () => {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+    } else {
+      const el = document.createElement('textarea');
+      el.value = url; document.body.appendChild(el);
+      el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -24,11 +35,27 @@ export default function SideMenu({ show, onClose, roomId, gameState, roomContrac
             <h3 className="text-lg font-bold text-rp-cyan mb-4">{t('game.gameInfo')}</h3>
             <div className="space-y-3 text-sm">
               <Row label="Room" value={roomId} />
-              <Row label={t('game.state')} value={gameState.state} color="text-cyan-400" />
+              <Row label={t('game.state')} value={gameState.state} color="text-rp-cyan" />
               <Row label={t('game.pot')} value={`$${gameState.pot?.toLocaleString()}`} color="text-rp-cyan" />
               <Row label={t('game.players')} value={`${players?.filter(p => p).length || 0} / ${players?.length || 0}`} />
-              <Row label={t('game.contract')} value={roomContract ? `${roomContract.substring(0, 10)}...` : '-'} mono />
+              {roomContract && (
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">{t('game.contract')}</span>
+                  <a href={`https://snowtrace.io/address/${roomContract}`} target="_blank" rel="noopener noreferrer"
+                    className="text-rp-cyan font-mono text-xs flex items-center gap-1 hover:underline">
+                    {roomContract.substring(0, 8)}...<ExternalLink size={10} />
+                  </a>
+                </div>
+              )}
             </div>
+
+            {/* Share room link */}
+            <button
+              onClick={handleShare}
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-rp-cyan/10 border border-rp-cyan/20 text-rp-cyan text-sm font-bold hover:bg-rp-cyan/20 transition-colors touch-target"
+            >
+              <Share2 size={14} /> Copy Room Link
+            </button>
 
             <div className="mt-6 pt-4 border-t border-white/10">
               <h4 className="text-xs text-neutral-500 mb-2">{t('game.playerList')}</h4>
