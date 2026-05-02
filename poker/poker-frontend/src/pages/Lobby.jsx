@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useDisconnect, useSignMessage, useSwitchChain } from 'wagmi';
 import { avalanche } from 'wagmi/chains';
-import { useAppKit } from '@reown/appkit/react';
+import { useWeb3Modal } from '../providers/Web3Provider';
 import { ShieldCheck, LogOut, Pickaxe, Zap } from 'lucide-react';
 
 import { CONFIG } from '../config';
@@ -25,7 +25,7 @@ export default function Lobby() {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { switchChain } = useSwitchChain();
-  const { open: openWalletModal } = useAppKit();
+  const { open: openWalletModal } = useWeb3Modal();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loadingText, setLoadingText] = useState('');
