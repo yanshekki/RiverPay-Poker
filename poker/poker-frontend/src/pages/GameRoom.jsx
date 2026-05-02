@@ -56,10 +56,20 @@ export default function GameRoom() {
     return () => socket.off('gameStateUpdate');
   }, [setGameState]);
 
-  // Cash-out handler
+  // Cash-out handler (retries if contract not loaded yet)
   useEffect(() => {
     const handler = async (claimData) => {
-      if (!roomContract) return;
+      if (!roomContract) {
+        // Contract not loaded yet — wait and retry once
+        await new Promise(r => setTimeout(r, 2000));
+        const current = useStore.getState();
+        // After timeout, if still no contract, alert user to retry
+        if (!roomContract) {
+          setErrorMsg('Contract not loaded. Please try cash out again.');
+          setIsCashingOut(false);
+          return;
+        }
+      }
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();

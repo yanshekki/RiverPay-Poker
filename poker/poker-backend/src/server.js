@@ -155,7 +155,16 @@ io.on('connection', async (socket) => {
         if (!existing) {
             room.addPlayer(socket.id, walletAddress);
             const p = room.players.find(p => p && p.address === walletAddress);
-            if (p) p.chips = 0;
+            if (p) {
+                // Try to restore chip balance from Redis (survive server restart)
+                const savedChips = await redisService.getChipBalances(roomId);
+                if (savedChips) {
+                    const saved = Object.values(savedChips).find(c => c.address === walletAddress);
+                    p.chips = saved ? saved.chips : 0;
+                } else {
+                    p.chips = 0;
+                }
+            }
         } else {
             existing.socketId = socket.id;
         }
@@ -229,6 +238,8 @@ io.on('connection', async (socket) => {
 
     // ─── disconnect ───
     socket.on('disconnect', async () => {
+        // Keep player in game — turn timer will auto-fold if it's their turn
+        // Player can reconnect and resume from same room
         await redisService.setUserOffline(socket.user.userId);
     });
 
@@ -267,6 +278,14 @@ async function broadcastGameState(roomId) {
     io.in(roomId).fetchSockets().then(async (sockets) => {
         sockets.forEach((socket) => socket.emit('gameStateUpdate', room.getGameStateFor(socket.id)));
         try { await redisService.cacheGameState(roomId, { playerCount: room.getActivePlayers().length, state: room.state, pot: room.pot }); } catch (e) {}
+        // Persist chip balances for restart recovery
+        try {
+            const chipData = {};
+            room.players.forEach((p, i) => {
+                if (p) chipData[i] = { address: p.address, chips: p.chips };
+            });
+            await redisService.cacheChipBalances(roomId, chipData);
+        } catch (e) {}
     });
 }
 

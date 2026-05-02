@@ -89,6 +89,20 @@ async function deleteGameState(roomId) {
   await redis.del(`game:${roomId}`);
 }
 
+// Chip balance persistence
+async function cacheChipBalances(roomId, chipData) {
+  await redis.set(`chips:${roomId}`, JSON.stringify(chipData), 'EX', 86400);
+}
+
+async function getChipBalances(roomId) {
+  const data = await redis.get(`chips:${roomId}`);
+  return data ? JSON.parse(data) : null;
+}
+
+async function deleteChipBalances(roomId) {
+  await redis.del(`chips:${roomId}`);
+}
+
 // ==========================================
 // 6. Active Games Tracking
 // ==========================================
@@ -121,4 +135,7 @@ module.exports = {
   addActiveGame,
   removeActiveGame,
   getActiveGames,
+  cacheChipBalances,
+  getChipBalances,
+  deleteChipBalances,
 };
