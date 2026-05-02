@@ -1,6 +1,6 @@
 import { createConfig, http, WagmiProvider } from 'wagmi';
 import { avalanche } from 'wagmi/chains';
-import { injected, walletConnect } from '@wagmi/connectors';
+import { walletConnect } from '@wagmi/connectors';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CONFIG } from '../config';
 
@@ -10,7 +10,6 @@ export const wagmiConfig = createConfig({
   chains: [avalanche],
   multiInjectedProviderDiscovery: true,
   connectors: [
-    injected(),
     walletConnect({
       projectId: CONFIG.WALLET_CONNECT_PROJECT_ID,
       metadata: {
