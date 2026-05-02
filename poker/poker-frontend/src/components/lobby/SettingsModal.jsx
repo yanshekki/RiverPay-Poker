@@ -8,8 +8,15 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
   const blindPresets = [[10, 20], [50, 100], [100, 200]];
   const seatOptions = [2, 6, 8];
   const timeOptions = [15, 30];
-  const isCustomBlind = !blindPresets.some(([sb, bb]) => settings.smallBlind === sb && settings.bigBlind === bb);
-  const [customBlinds, setCustomBlinds] = useState({ sb: settings.smallBlind, bb: settings.bigBlind });
+  const [showCustomBlinds, setShowCustomBlinds] = useState(false);
+  const isPreset = blindPresets.some(([sb, bb]) => settings.smallBlind === sb && settings.bigBlind === bb);
+
+  const enableCustom = () => {
+    if (!isPreset) return;
+    // Set to a non-preset value so custom inputs appear
+    onChange({ smallBlind: 25, bigBlind: 50 });
+    setShowCustomBlinds(true);
+  };
 
   return (
     <AnimatePresence>
@@ -33,50 +40,48 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
             </h2>
 
             <div className="space-y-6">
-              {/* Blinds */}
+              {/* ── Blinds ── */}
               <div>
                 <label className="text-sm text-neutral-400 mb-2 flex items-center gap-2"><Coins size={16} /> {t('settings.blinds')}</label>
                 <div className="flex gap-2 mb-2">
                   {blindPresets.map(([sb, bb]) => (
                     <motion.button key={sb} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                      onClick={() => onChange({ smallBlind: sb, bigBlind: bb })}
+                      onClick={() => { onChange({ smallBlind: sb, bigBlind: bb }); setShowCustomBlinds(false); }}
                       className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all touch-target ${
-                        !isCustomBlind && settings.smallBlind === sb
+                        isPreset && settings.smallBlind === sb
                           ? 'bg-rp-cyan/20 border-rp-cyan text-rp-light neon-cyan'
                           : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
                       }`}>{sb} / {bb}</motion.button>
                   ))}
                   <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                    onClick={() => {
-                      setCustomBlinds({ sb: settings.smallBlind, bb: settings.bigBlind });
-                      onChange({ smallBlind: customBlinds.sb, bigBlind: customBlinds.bb });
-                    }}
+                    onClick={enableCustom}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all touch-target ${
-                      isCustomBlind ? 'bg-rp-cyan/20 border-rp-cyan text-rp-light neon-cyan' : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
+                      !isPreset ? 'bg-rp-cyan/20 border-rp-cyan text-rp-light neon-cyan' : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
                     }`}>自訂</motion.button>
                 </div>
-                {isCustomBlind && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="flex gap-2 items-center">
+                {!isPreset && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
+                    className="flex gap-2 items-center overflow-hidden">
                     <div className="flex-1">
                       <label className="text-[10px] text-neutral-500">小盲 SB</label>
                       <input type="number" value={settings.smallBlind}
-                        onChange={e => onChange({ smallBlind: Math.max(1, Number(e.target.value)), bigBlind: Math.max(Number(e.target.value) * 2, settings.bigBlind) })}
-                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-rp-cyan"
+                        onChange={e => onChange({ smallBlind: Math.max(1, Number(e.target.value)) })}
+                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-rp-cyan touch-target"
                         min={1} />
                     </div>
                     <span className="text-neutral-500 mt-4">/</span>
                     <div className="flex-1">
                       <label className="text-[10px] text-neutral-500">大盲 BB</label>
                       <input type="number" value={settings.bigBlind}
-                        onChange={e => onChange({ bigBlind: Math.max(settings.smallBlind * 2, Number(e.target.value)) })}
-                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-rp-cyan"
-                        min={settings.smallBlind * 2} />
+                        onChange={e => onChange({ bigBlind: Math.max(1, Number(e.target.value)) })}
+                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-rp-cyan touch-target"
+                        min={1} />
                     </div>
                   </motion.div>
                 )}
               </div>
 
-              {/* Seats */}
+              {/* ── Seats ── */}
               <div>
                 <label className="text-sm text-neutral-400 mb-2 flex items-center gap-2"><Users size={16} /> {t('settings.seats')}</label>
                 <div className="flex gap-2">
@@ -92,7 +97,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
                 </div>
               </div>
 
-              {/* Time */}
+              {/* ── Time ── */}
               <div>
                 <label className="text-sm text-neutral-400 mb-2 flex items-center gap-2"><Clock size={16} /> {t('settings.timeLimit')}</label>
                 <div className="flex gap-2">
