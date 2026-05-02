@@ -188,7 +188,11 @@ export default function Lobby() {
         )}
       </motion.div>
 
-      <p className="z-10 text-neutral-700 text-xs mt-6">{t('app.footer')}</p>
+      <p className="z-10 text-neutral-700 text-xs mt-6">
+        <a href="https://ysk.hk/" target="_blank" rel="noopener noreferrer" className="hover:text-rp-cyan transition-colors">
+          {t('app.footer')}
+        </a>
+      </p>
 
       <WalletModal show={showWalletModal} onClose={() => setShowWalletModal(false)} />
       <SettingsModal show={showSettingsModal} onClose={() => setShowSettingsModal(false)}

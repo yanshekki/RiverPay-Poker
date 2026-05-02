@@ -308,5 +308,5 @@ async function broadcastGameState(roomId) {
 }
 
 server.listen(PORT, () => {
-    console.log(`🚀 RiverPay Poker Backend running on port ${PORT}`);
+    console.log(`🚀 RiverPay Poker Backend · Powered by YSK Limited (ysk.hk) · Port ${PORT}`);
 });

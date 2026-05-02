@@ -266,6 +266,14 @@ MIT © RiverPay Poker
 
 ---
 
+## 🏢 Powered by [YSK Limited](https://ysk.hk/)
+
+RiverPay Poker is built and maintained by **YSK Limited** — Hong Kong's premier remote development team specializing in Web3, full-stack systems, and cross-platform app development.
+
+> Need a custom blockchain app? [**Hire us →**](https://ysk.hk/)
+
+---
+
 ## 👨‍💻 About the Creator
 
 Built by **[Ki](https://linktr.ee/yanshekki)** — full-stack developer & Web3 builder.
