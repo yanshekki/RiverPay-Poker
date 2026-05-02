@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useDisconnect, useSignMessage, useSwitchChain } from 'wagmi';
 import { avalanche } from 'wagmi/chains';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { ShieldCheck, LogOut, Pickaxe, Zap } from 'lucide-react';
 
 import { CONFIG } from '../config';
@@ -16,6 +15,7 @@ import SettingsModal from '../components/lobby/SettingsModal';
 import RoomList from '../components/lobby/RoomList';
 import LoginButton from '../components/lobby/LoginButton';
 import LanguageSwitcher from '../components/language/LanguageSwitcher';
+import WalletModal from '../components/lobby/WalletModal';
 
 export default function Lobby() {
   const navigate = useNavigate();
@@ -25,13 +25,13 @@ export default function Lobby() {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { switchChain } = useSwitchChain();
-  const { open: openWeb3Modal } = useWeb3Modal();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
-  const [myRooms, setMyRooms] = useState({ active: [], completed: [] });
+  const [showWalletModal, setShowWalletModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [myRooms, setMyRooms] = useState({ active: [], completed: [] });
   const [roomSettings, setRoomSettings] = useState({
     maxPlayers: 8, smallBlind: 10, bigBlind: 20, turnTimer: 15,
   });
@@ -55,11 +55,11 @@ export default function Lobby() {
   }, [isConnected, token, logout]);
 
   const doLogin = async () => {
-    if (!isConnected) { openWeb3Modal(); return; }
+    if (!isConnected) { setShowWalletModal(true); return; }
     try {
       setIsLoggingIn(true);
-      setLoadingText('正在切換至 Avalanche 網路...');
-      try { await switchChain({ chainId: avalanche.id }); } catch (e) { console.error('Network switch:', e); setIsLoggingIn(false); return; }
+      setLoadingText(t('errors.networkRequired'));
+      try { await switchChain({ chainId: avalanche.id }); } catch (e) { setIsLoggingIn(false); return; }
 
       setLoadingText('向伺服器請求安全授權碼...');
       const walletAddr = address.toLowerCase();
@@ -81,9 +81,8 @@ export default function Lobby() {
       const { token: jwtToken, user } = await verifyRes.json();
       setAuth(user.walletAddress, user.id, jwtToken);
     } catch (error) {
-      console.error('登入失敗:', error);
       alert(error.message?.includes('rejected') ? t('errors.signRejected') : t('errors.loginFailed'));
-    } finally { setIsLoggingIn(false); }
+    } finally { setIsLoggingIn(false); setShowWalletModal(false); }
   };
 
   const createRoom = async () => {
@@ -110,7 +109,6 @@ export default function Lobby() {
       setShowSettingsModal(false);
       navigate(`/room/${newRoomId}`);
     } catch (error) {
-      console.error('開局失敗:', error);
       alert(error.code === 'ACTION_REJECTED' ? t('errors.txRejected') : t('errors.createRoomFailed'));
     } finally { setIsCreatingRoom(false); }
   };
@@ -155,15 +153,15 @@ export default function Lobby() {
                   <span className="text-xs text-rp-light mb-1 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-rp-light animate-pulse" /> {t('lobby.walletConnected')}
                   </span>
-                  <span className="font-mono text-cyan-400 text-sm">
+                  <span className="font-mono text-rp-cyan text-sm">
                     {address?.substring(0, 8)}...{address?.substring(address.length - 6)}
                   </span>
                 </motion.div>
                 <LoginButton isConnected={isConnected} isLoggingIn={isLoggingIn} loadingText={loadingText}
-                  onConnect={() => openWeb3Modal()} onLogin={doLogin} onDisconnect={disconnect} />
+                  onConnect={() => setShowWalletModal(true)} onLogin={doLogin} onDisconnect={disconnect} />
               </div>
             ) : (
-              <LoginButton isConnected={false} onConnect={() => openWeb3Modal()} />
+              <LoginButton isConnected={false} onConnect={() => setShowWalletModal(true)} />
             )}
           </>
         ) : (
@@ -198,6 +196,7 @@ export default function Lobby() {
 
       <p className="z-10 text-neutral-700 text-xs mt-6">{t('app.footer')}</p>
 
+      <WalletModal show={showWalletModal} onClose={() => setShowWalletModal(false)} />
       <SettingsModal show={showSettingsModal} onClose={() => setShowSettingsModal(false)}
         settings={roomSettings} onChange={(patch) => setRoomSettings(s => ({ ...s, ...patch }))}
         onCreate={createRoom} isCreating={isCreatingRoom} />

@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Wallet, X } from 'lucide-react';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { Wallet, X, Scan } from 'lucide-react';
+import { useConnect } from 'wagmi';
 
 export default function WalletModal({ show, onClose }) {
   const { t } = useTranslation();
-  const { open } = useWeb3Modal();
+  const { connect, connectors } = useConnect();
+
+  const handleConnect = async (connector) => {
+    try {
+      await connect({ connector });
+      onClose();
+    } catch (e) {
+      console.error('Connect failed:', e);
+    }
+  };
+
+  // Find connectors by type
+  const injectedConnector = connectors.find(c => c.type === 'injected');
+  const wcConnector = connectors.find(c => c.id === 'walletConnect');
 
   return (
     <AnimatePresence>
@@ -33,42 +46,58 @@ export default function WalletModal({ show, onClose }) {
 
             <p className="text-neutral-400 text-sm mb-6">{t('wallet.connectDescription')}</p>
 
-            {/* Desktop wallets quick-connect */}
             <div className="space-y-3">
-              {['MetaMask', 'Trust Wallet', 'Coinbase', 'Rabby'].map(name => (
-                <motion.button key={name}
+              {/* Browser Wallet */}
+              {injectedConnector && (
+                <motion.button
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  onClick={() => { onClose(); open(); }}
+                  onClick={() => handleConnect(injectedConnector)}
                   className="w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-rp-cyan/50 transition-all group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rp-cyan to-rp-blue flex items-center justify-center text-white font-bold text-sm">
-                    {name[0]}
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rp-cyan to-rp-blue flex items-center justify-center text-white font-bold">
+                    🦊
                   </div>
                   <div className="text-left flex-1">
-                    <div className="font-semibold text-white">{name}</div>
-                    <div className="text-xs text-neutral-500">
-                      {name === 'MetaMask' ? t('wallet.browserWallet') :
-                       name === 'Trust Wallet' ? t('wallet.mobileWallet') :
-                       name === 'Coinbase' ? t('wallet.coinbaseAccount') : t('wallet.walletConnect')}
-                    </div>
+                    <div className="font-semibold text-white">{injectedConnector.name}</div>
+                    <div className="text-xs text-neutral-500">{t('wallet.browserWallet')}</div>
                   </div>
                 </motion.button>
-              ))}
+              )}
 
-              {/* WalletConnect / More */}
-              <motion.button
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                onClick={() => { onClose(); open({ view: 'Connect' }); }}
-                className="w-full flex items-center gap-4 p-4 rounded-2xl bg-rp-cyan/10 hover:bg-rp-cyan/20 border border-rp-cyan/30 hover:border-rp-cyan/50 transition-all group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-rp-cyan flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 018 0v2"/><circle cx="12" cy="14" r="2"/></svg>
-                </div>
-                <div className="text-left flex-1">
-                  <div className="font-semibold text-white">WalletConnect</div>
-                  <div className="text-xs text-neutral-500">{t('wallet.mobileWallet')} · QR Code · 全部錢包</div>
-                </div>
-              </motion.button>
+              {/* WalletConnect */}
+              {wcConnector ? (
+                <motion.button
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  onClick={() => handleConnect(wcConnector)}
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl bg-rp-cyan/10 hover:bg-rp-cyan/20 border border-rp-cyan/30 hover:border-rp-cyan/50 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-rp-cyan flex items-center justify-center">
+                    <Scan size={20} className="text-white" />
+                  </div>
+                  <div className="text-left flex-1">
+                    <div className="font-semibold text-white">WalletConnect</div>
+                    <div className="text-xs text-neutral-500">{t('wallet.mobileWallet')} · QR Code</div>
+                  </div>
+                </motion.button>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    // Fallback: try all connectors
+                    const anyWc = connectors.find(c => c.name?.toLowerCase().includes('wallet') || c.id?.includes('wallet'));
+                    if (anyWc) handleConnect(anyWc);
+                  }}
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl bg-rp-cyan/10 hover:bg-rp-cyan/20 border border-rp-cyan/30 hover:border-rp-cyan/50 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-rp-cyan flex items-center justify-center">
+                    <Scan size={20} className="text-white" />
+                  </div>
+                  <div className="text-left flex-1">
+                    <div className="font-semibold text-white">WalletConnect</div>
+                    <div className="text-xs text-neutral-500">{t('wallet.mobileWallet')} · QR Code</div>
+                  </div>
+                </motion.button>
+              )}
             </div>
 
             <p className="text-neutral-600 text-xs text-center mt-6">{t('wallet.supportedWallets')}</p>
