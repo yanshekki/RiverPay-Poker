@@ -1,0 +1,43 @@
+{
+  "name": "riverpay-poker-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@web3modal/wagmi": "^5.1.11",
+    "ethers": "^6.16.0",
+    "framer-motion": "^12.38.0",
+    "i18next": "^26.0.8",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "lucide-react": "^1.0.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-i18next": "^17.0.6",
+    "react-router-dom": "^7.13.2",
+    "socket.io-client": "^4.8.3",
+    "viem": "^2.48.7",
+    "wagmi": "^3.6.9",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.0.1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

@@ -1,0 +1,269 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================
+   RiverPay Poker — Design Tokens & Base Styles
+   ============================================= */
+
+:root {
+  --rp-bg: #0a0a0a;
+  --rp-felt: #0d2818;
+  --rp-card: #1a1a2e;
+  --rp-gold: #ffd700;
+  --rp-cyan: #00f5ff;
+  --rp-magenta: #ff00ff;
+  --rp-emerald: #10b981;
+  --rp-rose: #f43f5e;
+  --rp-surface: rgba(20, 20, 30, 0.8);
+  --rp-border: rgba(255, 255, 255, 0.06);
+  --rp-text: #e2e8f0;
+  --rp-text-dim: #64748b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--rp-bg);
+  color: var(--rp-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* =============================================
+   Animations — Floating Particles
+   ============================================= */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.3; }
+  25%  { transform: translateY(-30px) translateX(15px) rotate(5deg); opacity: 0.5; }
+  50%  { transform: translateY(-15px) translateX(-10px) rotate(-3deg); opacity: 0.4; }
+  75%  { transform: translateY(-40px) translateX(20px) rotate(8deg); opacity: 0.2; }
+}
+
+@keyframes floatReverse {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.2; }
+  33%  { transform: translateY(25px) translateX(-15px) rotate(-5deg); opacity: 0.4; }
+  66%  { transform: translateY(10px) translateX(10px) rotate(3deg); opacity: 0.3; }
+}
+
+@keyframes particleDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(15px, -20px) scale(1.2); }
+  66%  { transform: translate(-10px, -40px) scale(0.8); }
+  100% { transform: translate(5px, -60px) scale(0); opacity: 0; }
+}
+
+/* =============================================
+   Card Suit Background Particles
+   ============================================= */
+.suit-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  font-size: 2rem;
+  animation: float 8s ease-in-out infinite;
+}
+.suit-particle:nth-child(odd) { animation-name: floatReverse; animation-duration: 10s; }
+.suit-particle:nth-child(3n) { animation-duration: 12s; }
+.suit-particle:nth-child(4n) { animation-duration: 7s; }
+
+/* =============================================
+   Glassmorphism Panel
+   ============================================= */
+.glass-panel {
+  background: rgba(20, 20, 30, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel-light {
+  background: rgba(30, 30, 45, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =============================================
+   Neon Glow Effects
+   ============================================= */
+.neon-cyan {
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.3),
+              0 0 30px rgba(0, 245, 255, 0.1);
+}
+.neon-gold {
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3),
+              0 0 30px rgba(255, 215, 0, 0.1);
+}
+.neon-magenta {
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.3),
+              0 0 30px rgba(255, 0, 255, 0.1);
+}
+.neon-emerald {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3),
+              0 0 30px rgba(16, 185, 129, 0.1);
+}
+
+/* =============================================
+   Shimmer Effect
+   ============================================= */
+.shimmer-text {
+  background: linear-gradient(90deg, #ffd700 0%, #fff 50%, #ffd700 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* =============================================
+   Gradient Borders
+   ============================================= */
+.border-gradient {
+  position: relative;
+}
+.border-gradient::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #ffd700, #ff00ff, #00f5ff, #ffd700);
+  background-size: 300% 300%;
+  animation: borderRotate 4s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+@keyframes borderRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =============================================
+   Card 3D Perspective
+   ============================================= */
+.perspective { perspective: 800px; }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 { transform: rotateY(180deg); }
+
+/* =============================================
+   Poker Chip (CSS-only)
+   ============================================= */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 900;
+  font-family: var(--rp-mono);
+  border: 3px dashed rgba(255,255,255,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 4px rgba(255,255,255,0.2);
+  position: relative;
+  user-select: none;
+}
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+}
+.chip-red    { background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b); color: white; }
+.chip-blue   { background: radial-gradient(circle at 30% 30%, #3b82f6, #1e40af); color: white; }
+.chip-green  { background: radial-gradient(circle at 30% 30%, #22c55e, #166534); color: white; }
+.chip-black  { background: radial-gradient(circle at 30% 30%, #4b5563, #111827); color: white; }
+.chip-gold   { background: radial-gradient(circle at 30% 30%, #fbbf24, #92400e); color: #1a1a1a; }
+
+/* =============================================
+   Confetti Particles (Win Animation)
+   ============================================= */
+@keyframes confettiFall {
+  0%   { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 100;
+  animation: confettiFall 3s ease-in forwards;
+}
+
+/* =============================================
+   Timer Bar
+   ============================================= */
+.timer-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+  background-size: 200% 100%;
+  transition: width 0.1s linear;
+}
+
+/* =============================================
+   Mobile touch-friendly overrides
+   ============================================= */
+@media (max-width: 767px) {
+  input, select, button {
+    font-size: 16px !important; /* Prevent iOS zoom */
+  }
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* =============================================
+   Felt Table Texture
+   ============================================= */
+.felt-table {
+  background:
+    radial-gradient(ellipse at center, rgba(16,185,129,0.15) 0%, transparent 70%),
+    linear-gradient(135deg, #0d2818 0%, #0a1f12 50%, #0d2818 100%);
+}
+
+/* =============================================
+   Safe Area for mobile notches
+   ============================================= */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}

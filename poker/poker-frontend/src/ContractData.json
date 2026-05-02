@@ -1,0 +1,459 @@
+{
+  "network": "avalanche",
+  "factoryAddress": "0xC58A1b678Cc06d5859DE8C4757aEcBf185246D25",
+  "factoryAbi": [
+    {
+      "type": "constructor",
+      "stateMutability": "undefined",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_usdtToken"
+        },
+        {
+          "type": "address",
+          "name": "_backendSigner"
+        },
+        {
+          "type": "address",
+          "name": "_platformWallet"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "FailedDeployment",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InsufficientBalance",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "balance"
+        },
+        {
+          "type": "uint256",
+          "name": "needed"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableInvalidOwner",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableUnauthorizedAccount",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "previousOwner",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "newOwner",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "RoomCreated",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "roomAddress",
+          "indexed": true
+        },
+        {
+          "type": "string",
+          "name": "roomId",
+          "indexed": false
+        },
+        {
+          "type": "address",
+          "name": "creator",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "backendSigner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "createRoom",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "roomId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "platformWallet",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "roomImplementation",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "setImplementation",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_impl"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "newOwner"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "usdtToken",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    }
+  ],
+  "roomAbi": [
+    {
+      "type": "error",
+      "name": "ECDSAInvalidSignature",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ECDSAInvalidSignatureLength",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "length"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ECDSAInvalidSignatureS",
+      "inputs": [
+        {
+          "type": "bytes32",
+          "name": "s"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "SafeERC20FailedOperation",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "token"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Deposit",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Swept",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Withdraw",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "nonce",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "backendSigner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "claim",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        },
+        {
+          "type": "uint256",
+          "name": "nonce"
+        },
+        {
+          "type": "bytes",
+          "name": "signature"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "deposit",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "initialize",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_usdtToken"
+        },
+        {
+          "type": "address",
+          "name": "_backendSigner"
+        },
+        {
+          "type": "address",
+          "name": "_platformWallet"
+        },
+        {
+          "type": "string",
+          "name": "_roomId"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "platformWallet",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "roomId",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "sweep",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "usdtToken",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "usedNonces",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": ""
+        },
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(uuid())
+  walletAddress String        @unique
+  nonce         String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  roomsCreated  Room[]        @relation("RoomCreator")
+  playedRooms   RoomPlayer[]
+  transactions  Transaction[]
+}
+
+model Room {
+  id              String        @id @default(uuid())
+  roomCode        String        @unique
+  status          String        @default("WAITING")
+  contractAddress String?       @unique
+  creatorId       String
+  totalPot        Decimal       @default(0) @db.Decimal(36,18)
+  platformFee     Decimal       @default(0) @db.Decimal(36,18)
+  createdAt       DateTime      @default(now())
+  finishedAt      DateTime?
+  bigBlind        Int           @default(20)
+  maxPlayers      Int           @default(8)
+  smallBlind      Int           @default(10)
+  turnTimer       Int           @default(15)
+  creator         User          @relation("RoomCreator", fields: [creatorId], references: [id])
+  players         RoomPlayer[]
+  transactions    Transaction[]
+
+  @@index([creatorId], map: "Room_creatorId_fkey")
+}
+
+model RoomPlayer {
+  id       String   @id @default(uuid())
+  userId   String
+  roomId   String
+  joinedAt DateTime @default(now())
+  room     Room     @relation(fields: [roomId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, roomId])
+  @@index([roomId], map: "RoomPlayer_roomId_fkey")
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  roomId    String
+  userId    String
+  type      String
+  amount    Decimal  @db.Decimal(36,18)
+  txHash    String?  @unique
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  room      Room     @relation(fields: [roomId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([roomId])
+  @@index([userId])
+}
