@@ -2,7 +2,13 @@
  <path d="M350 400C350 400 380 350 400 320C420 290 450 280 450 240C450 200 420 180 400 180C380 180 350 200 350 240C350 280 380 290 400 320C420 350 450 400 450 400" stroke="url(#paint0_linear)" stroke-width="40" stroke-linecap="round"/>
  <path d="M400 120C400 120 380 150 360 150C340 150 340 170 360 180C380 190 400 210 400 210C400 210 420 190 440 180C460 170 460 150 440 150C420 150 400 120 400 120Z" fill="#00B4D8"/>
  <rect x="395" y="200" width="10" height="20" fill="#00B4D8"/>
- <text x="400" y="550" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="#023E8A" text-anchor="middle">RP</text>
+ <circle cx="330" cy="240" r="8" fill="#90E0EF"/>
+ <circle cx="470" cy="320" r="8" fill="#90E0EF"/>
+ <circle cx="380" cy="350" r="5" fill="#023E8A"/>
+ <path d="M330 240L350 240" stroke="#90E0EF" stroke-width="2"/>
+ <path d="M470 320L450 320" stroke="#90E0EF" stroke-width="2"/>
+ <text x="400" y="500" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="bold" fill="#023E8A" text-anchor="middle">RIVERPAY</text>
+ <text x="400" y="560" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="300" fill="#00B4D8" text-anchor="middle" letter-spacing="10">POKER</text>
  <defs>
  <linearGradient id="paint0_linear" x1="350" y1="240" x2="450" y2="400" gradientUnits="userSpaceOnUse">
  <stop stop-color="#00B4D8"/>

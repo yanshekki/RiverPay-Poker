@@ -152,7 +152,7 @@ export default function GameRoom() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center">
             <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}>
-              <Loader2 size={64} className="text-yellow-400" />
+              <Loader2 size={64} className="text-rp-cyan" />
             </motion.div>
             <h2 className="text-2xl font-bold text-white mt-4 mb-2">{t('game.cashOutTitle')}</h2>
             <p className="text-neutral-400">{t('game.cashOutDesc')}</p>

@@ -21,11 +21,11 @@ export default function SideMenu({ show, onClose, roomId, gameState, roomContrac
               <X size={24} />
             </button>
 
-            <h3 className="text-lg font-bold text-yellow-400 mb-4">{t('game.gameInfo')}</h3>
+            <h3 className="text-lg font-bold text-rp-cyan mb-4">{t('game.gameInfo')}</h3>
             <div className="space-y-3 text-sm">
               <Row label="Room" value={roomId} />
               <Row label={t('game.state')} value={gameState.state} color="text-cyan-400" />
-              <Row label={t('game.pot')} value={`$${gameState.pot?.toLocaleString()}`} color="text-yellow-400" />
+              <Row label={t('game.pot')} value={`$${gameState.pot?.toLocaleString()}`} color="text-rp-cyan" />
               <Row label={t('game.players')} value={`${players?.filter(p => p).length || 0} / ${players?.length || 0}`} />
               <Row label={t('game.contract')} value={roomContract ? `${roomContract.substring(0, 10)}...` : '-'} mono />
             </div>
@@ -34,10 +34,10 @@ export default function SideMenu({ show, onClose, roomId, gameState, roomContrac
               <h4 className="text-xs text-neutral-500 mb-2">{t('game.playerList')}</h4>
               {players?.filter(p => p).map((p, i) => (
                 <div key={i} className="flex justify-between items-center py-1.5 text-sm">
-                  <span className={`font-mono ${p.address === walletAddress ? 'text-yellow-400' : 'text-neutral-300'}`}>
+                  <span className={`font-mono ${p.address === walletAddress ? 'text-rp-cyan' : 'text-neutral-300'}`}>
                     {p.address?.substring(0, 6)}...
                   </span>
-                  <span className="text-emerald-400">${p.chips?.toLocaleString()}</span>
+                  <span className="text-rp-light">${p.chips?.toLocaleString()}</span>
                 </div>
               ))}
             </div>

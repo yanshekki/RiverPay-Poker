@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const CHIP_COLORS = { red: 'chip-red', blue: 'chip-blue', green: 'chip-green', gold: 'chip-gold', black: 'chip-black' };
+const CHIP_COLORS = { red: 'chip-red', blue: 'chip-blue', green: 'chip-green', gold: 'chip-cyan', black: 'chip-black' };
 
-export default function Chip({ amount, color = 'gold' }) {
+export default function Chip({ amount, color = 'cyan' }) {
   return (
     <motion.div
       initial={{ scale: 0, y: 20 }}

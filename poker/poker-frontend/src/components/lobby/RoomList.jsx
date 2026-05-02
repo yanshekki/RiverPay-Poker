@@ -10,8 +10,8 @@ export default function RoomList({ active, completed, onNavigate }) {
   return (
     <div className="w-full text-left border-t border-white/5 pt-6">
       <div className="mb-4">
-        <h3 className="text-sm font-bold text-emerald-400 mb-3 px-1 flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <h3 className="text-sm font-bold text-rp-light mb-3 px-1 flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-rp-light animate-pulse" />
           {t('lobby.activeGames')}
         </h3>
         {active.length === 0 ? (
@@ -29,7 +29,7 @@ export default function RoomList({ active, completed, onNavigate }) {
                     {room.contractAddress ? `${room.contractAddress.substring(0, 6)}...${room.contractAddress.substring(36)}` : t('lobby.notBound')}
                   </p>
                 </div>
-                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded font-bold group-hover:scale-105 transition-transform">
+                <span className="text-xs bg-rp-cyan/20 text-rp-light px-2 py-1 rounded font-bold group-hover:scale-105 transition-transform">
                   {t('lobby.rejoin')}
                 </span>
               </motion.div>

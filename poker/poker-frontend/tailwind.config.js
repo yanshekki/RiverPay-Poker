@@ -7,15 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        riverpay: {
+        rp: {
           bg: '#0a0a0a',
+          cyan: '#00B4D8',
+          blue: '#023E8A',
+          light: '#90E0EF',
+          navy: '#03045E',
           felt: '#0d2818',
           card: '#1a1a2e',
-          gold: '#ffd700',
-          cyan: '#00f5ff',
-          magenta: '#ff00ff',
-          emerald: '#10b981',
-          rose: '#f43f5e',
         }
       },
       fontFamily: {
@@ -38,8 +37,8 @@ export default {
       },
       keyframes: {
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 5px rgba(0,245,255,0.3)' },
-          '50%': { boxShadow: '0 0 25px rgba(0,245,255,0.6), 0 0 50px rgba(0,245,255,0.2)' },
+          '0%, 100%': { boxShadow: '0 0 5px rgba(0,180,216,0.3)' },
+          '50%': { boxShadow: '0 0 25px rgba(0,180,216,0.6), 0 0 50px rgba(0,180,216,0.2)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },

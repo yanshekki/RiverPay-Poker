@@ -87,7 +87,7 @@ export default function VoiceChat({ roomId }) {
       onTouchCancel={stopRecording}
       className={`p-2.5 rounded-full transition-all touch-target ${
         isRecording
-          ? 'bg-rose-500 animate-pulse shadow-[0_0_20px_rgba(244,63,94,0.5)]'
+          ? 'bg-red-500 animate-pulse shadow-[0_0_20px_rgba(244,63,94,0.5)]'
           : micReady
             ? 'bg-white/10 hover:bg-white/20 border border-white/10'
             : 'bg-white/5 border border-white/5 opacity-50'

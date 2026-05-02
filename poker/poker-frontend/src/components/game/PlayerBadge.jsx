@@ -28,19 +28,19 @@ export default function PlayerBadge({ player, isMe, isTurn, handCards, isFolded 
         transition={{ repeat: Infinity, duration: 2 }}
         className={`w-24 sm:w-28 md:w-32 p-2 sm:p-3 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-[10px] sm:text-xs border-2 relative z-20 ${
           isFolded ? 'border-white/10 bg-black/40' :
-          isTurn ? 'border-yellow-400 bg-black/60' : 'border-white/10 bg-black/50'
+          isTurn ? 'border-rp-cyan bg-black/60' : 'border-white/10 bg-black/50'
         }`}
       >
         {player.bet > 0 && (
-          <div className="absolute -top-5 bg-yellow-400 text-black px-2 sm:px-3 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
+          <div className="absolute -top-5 bg-rp-cyan text-black px-2 sm:px-3 py-0.5 rounded-full font-bold text-[10px] sm:text-xs">
             ${player.bet}
           </div>
         )}
-        <span className={`truncate w-full text-center font-mono ${isMe ? 'text-yellow-400' : 'text-neutral-300'}`}>
+        <span className={`truncate w-full text-center font-mono ${isMe ? 'text-rp-cyan' : 'text-neutral-300'}`}>
           {isMe ? t('game.you') : `${player.address?.substring(0, 6)}...`}
         </span>
         <div className="w-full h-px bg-white/5 my-1" />
-        <span className="text-emerald-400 font-bold text-sm sm:text-base tabular-nums">
+        <span className="text-rp-light font-bold text-sm sm:text-base tabular-nums">
           ${player.chips?.toLocaleString() || '0'}
         </span>
       </motion.div>
@@ -48,7 +48,7 @@ export default function PlayerBadge({ player, isMe, isTurn, handCards, isFolded 
       {player.lastAction && !isTurn && (
         <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
           className={`absolute -bottom-3 px-2 sm:px-3 py-0.5 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider ${
-            isFolded ? 'bg-white/10 text-neutral-500' : 'bg-yellow-400/20 text-yellow-400'
+            isFolded ? 'bg-white/10 text-neutral-500' : 'bg-rp-cyan/20 text-rp-cyan'
           }`}
         >
           {player.lastAction}

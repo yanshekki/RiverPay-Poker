@@ -29,7 +29,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
             </button>
 
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Settings className="text-yellow-400" /> {t('settings.title')}
+              <Settings className="text-rp-cyan" /> {t('settings.title')}
             </h2>
 
             <div className="space-y-6">
@@ -42,7 +42,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
                       onClick={() => onChange({ smallBlind: sb, bigBlind: bb })}
                       className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all touch-target ${
                         !isCustomBlind && settings.smallBlind === sb
-                          ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 neon-emerald'
+                          ? 'bg-rp-cyan/20 border-rp-cyan text-rp-light neon-cyan'
                           : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
                       }`}>{sb} / {bb}</motion.button>
                   ))}
@@ -52,7 +52,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
                       onChange({ smallBlind: customBlinds.sb, bigBlind: customBlinds.bb });
                     }}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all touch-target ${
-                      isCustomBlind ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 neon-emerald' : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
+                      isCustomBlind ? 'bg-rp-cyan/20 border-rp-cyan text-rp-light neon-cyan' : 'bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10'
                     }`}>自訂</motion.button>
                 </div>
                 {isCustomBlind && (
@@ -61,7 +61,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
                       <label className="text-[10px] text-neutral-500">小盲 SB</label>
                       <input type="number" value={settings.smallBlind}
                         onChange={e => onChange({ smallBlind: Math.max(1, Number(e.target.value)), bigBlind: Math.max(Number(e.target.value) * 2, settings.bigBlind) })}
-                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-emerald-500"
+                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-rp-cyan"
                         min={1} />
                     </div>
                     <span className="text-neutral-500 mt-4">/</span>
@@ -69,7 +69,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
                       <label className="text-[10px] text-neutral-500">大盲 BB</label>
                       <input type="number" value={settings.bigBlind}
                         onChange={e => onChange({ bigBlind: Math.max(settings.smallBlind * 2, Number(e.target.value)) })}
-                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-emerald-500"
+                        className="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-bold outline-none focus:border-rp-cyan"
                         min={settings.smallBlind * 2} />
                     </div>
                   </motion.div>
@@ -112,7 +112,7 @@ export default function SettingsModal({ show, onClose, settings, onChange, onCre
             <motion.button whileHover={!isCreating ? { scale: 1.02 } : {}} whileTap={!isCreating ? { scale: 0.98 } : {}}
               onClick={onCreate} disabled={isCreating}
               className={`w-full mt-8 py-4 rounded-xl text-lg font-bold flex justify-center items-center gap-2 touch-target ${
-                isCreating ? 'bg-white/5 text-neutral-500 cursor-not-allowed' : 'bg-gradient-to-r from-emerald-500 to-green-600 text-white neon-emerald'
+                isCreating ? 'bg-white/5 text-neutral-500 cursor-not-allowed' : 'bg-gradient-to-r from-rp-cyan to-rp-blue text-white neon-cyan'
               }`}>
               {isCreating ? <><Loader2 className="animate-spin" size={20} /><span>...</span></> : <><Pickaxe size={20} /> {t('settings.confirm')}</>}
             </motion.button>

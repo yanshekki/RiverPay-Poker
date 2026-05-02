@@ -21,7 +21,7 @@ export default function LoginButton({ isConnected, isLoggingIn, loadingText, onC
     <div className="space-y-4 w-full">
       <motion.button whileHover={!isLoggingIn ? { scale: 1.02 } : {}} whileTap={!isLoggingIn ? { scale: 0.98 } : {}}
         onClick={onLogin} disabled={isLoggingIn}
-        className="w-full flex items-center justify-center gap-3 py-4 rounded-xl text-lg font-bold transition-all bg-gradient-to-r from-yellow-400 to-yellow-600 text-black neon-gold touch-target"
+        className="w-full flex items-center justify-center gap-3 py-4 rounded-xl text-lg font-bold transition-all bg-gradient-to-r from-rp-cyan to-rp-blue text-black neon-cyan touch-target"
       >
         {isLoggingIn ? <><Loader2 className="animate-spin" size={24} /><span>{loadingText}</span></> : <><Sparkles size={20} /> {t('lobby.signLogin')}</>}
       </motion.button>

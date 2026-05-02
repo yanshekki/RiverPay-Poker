@@ -44,13 +44,13 @@ export default function LanguageSwitcher({ position = 'relative', size = 18 }) {
                 onClick={() => { i18n.changeLanguage(lang.code); setOpen(false); }}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors touch-target ${
                   i18n.language === lang.code
-                    ? 'bg-yellow-400/15 text-yellow-400'
+                    ? 'bg-rp-cyan/15 text-rp-cyan'
                     : 'text-neutral-300 hover:bg-white/5'
                 }`}
               >
                 <span>{lang.flag}</span>
                 <span>{lang.label}</span>
-                {i18n.language === lang.code && <span className="ml-auto text-yellow-400 text-xs">✓</span>}
+                {i18n.language === lang.code && <span className="ml-auto text-rp-cyan text-xs">✓</span>}
               </button>
             ))}
           </motion.div>

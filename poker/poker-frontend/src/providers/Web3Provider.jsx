@@ -25,7 +25,7 @@ createWeb3Modal({
   projectId: CONFIG.WALLET_CONNECT_PROJECT_ID,
   themeMode: 'dark',
   themeVariables: {
-    '--w3m-accent': '#ffd700',
+    '--w3m-accent': '#00B4D8',
     '--w3m-color-mix': '#0a0a0a',
     '--w3m-color-mix-strength': 20,
   },

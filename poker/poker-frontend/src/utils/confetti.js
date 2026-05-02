@@ -1,6 +1,6 @@
 export function spawnConfetti(count = 50) {
   if (typeof document === 'undefined') return;
-  const colors = ['#ffd700', '#ff00ff', '#00f5ff', '#10b981', '#f43f5e', '#fbbf24'];
+  const colors = ['#00B4D8', '#ff00ff', '#00f5ff', '#10b981', '#f43f5e', '#00B4D8'];
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
     el.className = 'confetti';

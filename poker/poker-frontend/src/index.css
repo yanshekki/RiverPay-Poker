@@ -10,7 +10,7 @@
   --rp-bg: #0a0a0a;
   --rp-felt: #0d2818;
   --rp-card: #1a1a2e;
-  --rp-gold: #ffd700;
+  --rp-cyan: #00B4D8;
   --rp-cyan: #00f5ff;
   --rp-magenta: #ff00ff;
   --rp-emerald: #10b981;
@@ -114,7 +114,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 245, 255, 0.3),
               0 0 30px rgba(0, 245, 255, 0.1);
 }
-.neon-gold {
+.neon-cyan {
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.3),
               0 0 30px rgba(255, 215, 0, 0.1);
 }
@@ -122,7 +122,7 @@ body {
   box-shadow: 0 0 10px rgba(255, 0, 255, 0.3),
               0 0 30px rgba(255, 0, 255, 0.1);
 }
-.neon-emerald {
+.neon-cyan {
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.3),
               0 0 30px rgba(16, 185, 129, 0.1);
 }
@@ -131,7 +131,7 @@ body {
    Shimmer Effect
    ============================================= */
 .shimmer-text {
-  background: linear-gradient(90deg, #ffd700 0%, #fff 50%, #ffd700 100%);
+  background: linear-gradient(90deg, #00B4D8 0%, #90E0EF 50%, #00B4D8 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -151,7 +151,7 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, #ffd700, #ff00ff, #00f5ff, #ffd700);
+  background: linear-gradient(135deg, #00B4D8, #ff00ff, #00f5ff, #00B4D8);
   background-size: 300% 300%;
   animation: borderRotate 4s linear infinite;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -207,7 +207,7 @@ body {
 .chip-blue   { background: radial-gradient(circle at 30% 30%, #3b82f6, #1e40af); color: white; }
 .chip-green  { background: radial-gradient(circle at 30% 30%, #22c55e, #166534); color: white; }
 .chip-black  { background: radial-gradient(circle at 30% 30%, #4b5563, #111827); color: white; }
-.chip-gold   { background: radial-gradient(circle at 30% 30%, #fbbf24, #92400e); color: #1a1a1a; }
+.chip-cyan   { background: radial-gradient(circle at 30% 30%, #00B4D8, #92400e); color: #1a1a1a; }
 
 /* =============================================
    Confetti Particles (Win Animation)
@@ -254,7 +254,7 @@ body {
    ============================================= */
 .felt-table {
   background:
-    radial-gradient(ellipse at center, rgba(16,185,129,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse at center, rgba(0,180,216,0.15) 0%, transparent 70%),
     linear-gradient(135deg, #0d2818 0%, #0a1f12 50%, #0d2818 100%);
 }
 

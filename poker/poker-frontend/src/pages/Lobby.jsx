@@ -4,9 +4,10 @@ import { ethers } from 'ethers';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  useAccount, useConnect, useDisconnect, useSignMessage, useSwitchChain
+  useAccount, useDisconnect, useSignMessage, useSwitchChain
 } from 'wagmi';
 import { avalanche } from 'wagmi/chains';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { ShieldCheck, LogOut, Pickaxe, Zap } from 'lucide-react';
 
 import { CONFIG } from '../config';
@@ -25,10 +26,10 @@ export default function Lobby() {
   const { t } = useTranslation();
   const { token, setAuth, logout } = useStore();
   const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { switchChain } = useSwitchChain();
+  const { open: openWeb3Modal } = useWeb3Modal();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loadingText, setLoadingText] = useState('');
@@ -90,10 +91,6 @@ export default function Lobby() {
     } finally { setIsLoggingIn(false); setShowWalletModal(false); }
   };
 
-  const connectWallet = useCallback(async (connector) => {
-    setShowWalletModal(false);
-    try { await connect({ connector }); setTimeout(() => doLogin(), 500); } catch (e) { console.error('Wallet connect failed:', e); }
-  }, [connect, doLogin]);
 
   const createRoom = async () => {
     if (!isConnected) return alert(t('lobby.connectWallet'));
@@ -133,7 +130,7 @@ export default function Lobby() {
       {/* Background glow orbs */}
       <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-fuchsia-500/10 rounded-full blur-[120px]" />
       <div className="absolute bottom-[-20%] right-[-10%] w-96 h-96 bg-cyan-400/10 rounded-full blur-[120px]" />
-      <div className="absolute top-[40%] left-[50%] w-64 h-64 bg-yellow-400/5 rounded-full blur-[80px]" />
+      <div className="absolute top-[40%] left-[50%] w-64 h-64 bg-rp-cyan/5 rounded-full blur-[80px]" />
 
       {/* Main card */}
       <motion.div
@@ -145,17 +142,17 @@ export default function Lobby() {
         <div className="flex flex-col items-center w-full">
           <div className="flex items-center gap-2 mb-2">
             <motion.div animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}>
-              <ShieldCheck size={64} className="text-yellow-400" />
+              <ShieldCheck size={64} className="text-rp-cyan" />
             </motion.div>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-center">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400">{t('lobby.title')}</span>{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rp-cyan via-rp-light to-rp-cyan">{t('lobby.title')}</span>{' '}
             <span className="text-white">{t('lobby.subtitle')}</span>
           </h1>
           <LanguageSwitcher position="relative" size={18} />
         </div>
         <p className="text-neutral-500 mb-8 text-center text-sm flex items-center gap-1">
-          <Zap size={14} className="text-yellow-400" /> {t('lobby.description')}
+          <Zap size={14} className="text-rp-cyan" /> {t('lobby.description')}
         </p>
 
         {!token ? (
@@ -163,9 +160,9 @@ export default function Lobby() {
             {isConnected ? (
               <div className="w-full">
                 <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}
-                  className="bg-white/5 w-full p-4 rounded-xl border border-emerald-500/30 mb-4 flex flex-col items-center">
-                  <span className="text-xs text-emerald-400 mb-1 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> {t('lobby.walletConnected')}
+                  className="bg-white/5 w-full p-4 rounded-xl border border-rp-cyan/30 mb-4 flex flex-col items-center">
+                  <span className="text-xs text-rp-light mb-1 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-rp-light animate-pulse" /> {t('lobby.walletConnected')}
                   </span>
                   <span className="font-mono text-cyan-400 text-sm">
                     {address?.substring(0, 8)}...{address?.substring(address.length - 6)}
@@ -181,18 +178,18 @@ export default function Lobby() {
         ) : (
           <div className="w-full flex flex-col items-center">
             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}
-              className="bg-white/5 w-full p-4 rounded-xl border border-emerald-500/30 mb-6 flex flex-col items-center">
-              <span className="text-xs text-emerald-400 mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> {t('lobby.loggedIn')}
+              className="bg-white/5 w-full p-4 rounded-xl border border-rp-cyan/30 mb-6 flex flex-col items-center">
+              <span className="text-xs text-rp-light mb-1 flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-rp-light animate-pulse" /> {t('lobby.loggedIn')}
               </span>
-              <span className="font-mono text-yellow-400 text-sm">
+              <span className="font-mono text-rp-cyan text-sm">
                 {address?.substring(0, 8)}...{address?.substring(address.length - 6)}
               </span>
             </motion.div>
 
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               onClick={() => setShowSettingsModal(true)}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-xl text-lg font-bold transition-all mb-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white neon-emerald touch-target">
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-xl text-lg font-bold transition-all mb-4 bg-gradient-to-r from-rp-cyan to-rp-blue text-white neon-cyan touch-target">
               <Pickaxe size={20} /> {t('lobby.createRoom')}
             </motion.button>
 
@@ -210,7 +207,7 @@ export default function Lobby() {
 
       <p className="z-10 text-neutral-700 text-xs mt-6">{t('app.footer')}</p>
 
-      <WalletModal show={showWalletModal} onClose={() => setShowWalletModal(false)} onSelect={connectWallet} />
+      <WalletModal show={showWalletModal} onClose={() => setShowWalletModal(false)} />
       <SettingsModal show={showSettingsModal} onClose={() => setShowSettingsModal(false)}
         settings={roomSettings} onChange={(patch) => setRoomSettings(s => ({ ...s, ...patch }))}
         onCreate={createRoom} isCreating={isCreatingRoom} />
