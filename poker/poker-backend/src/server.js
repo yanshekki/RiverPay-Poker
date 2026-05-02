@@ -137,6 +137,14 @@ io.on('connection', async (socket) => {
             } catch (e) {}
 
             const newRoom = new Room(roomId, settings);
+
+            // Crash recovery: restore full game state from Redis if available
+            const savedState = await redisService.getFullGameState(roomId);
+            if (savedState && savedState.state !== 'WAITING' && savedState.state !== 'SHOWDOWN') {
+                console.log(`Restoring game state for room ${roomId} (state: ${savedState.state})`);
+                newRoom.restore(savedState, {});
+            }
+
             newRoom.onGameOver = async ({ winnerAddress, potAmount, netAmount, handName }) => {
                 const contractAddress = roomContracts.get(roomId);
                 if (!contractAddress) return;
@@ -273,6 +281,8 @@ io.on('connection', async (socket) => {
             await redisService.deleteRoomContract(roomId);
             await redisService.removeActiveGame(roomId);
             await redisService.deleteGameState(roomId);
+            await redisService.deleteFullGameState(roomId);
+            await redisService.deleteChipBalances(roomId);
             try { await prisma.room.update({ where: { roomCode: roomId }, data: { status: 'FINISHED', finishedAt: new Date() } }); } catch (e) {}
         }
     }));
