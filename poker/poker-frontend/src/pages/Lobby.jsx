@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useDisconnect, useSignMessage, useSwitchChain } from 'wagmi';
 import { avalanche } from 'wagmi/chains';
+import { useAppKit } from '@reown/appkit/react';
 import { ShieldCheck, LogOut, Pickaxe, Zap } from 'lucide-react';
 
 import { CONFIG } from '../config';
@@ -15,7 +16,6 @@ import SettingsModal from '../components/lobby/SettingsModal';
 import RoomList from '../components/lobby/RoomList';
 import LoginButton from '../components/lobby/LoginButton';
 import LanguageSwitcher from '../components/language/LanguageSwitcher';
-import WalletModal from '../components/lobby/WalletModal';
 
 export default function Lobby() {
   const navigate = useNavigate();
@@ -25,11 +25,11 @@ export default function Lobby() {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { switchChain } = useSwitchChain();
+  const { open: openWalletModal } = useAppKit();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
-  const [showWalletModal, setShowWalletModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [myRooms, setMyRooms] = useState({ active: [], completed: [] });
   const [roomSettings, setRoomSettings] = useState({
@@ -55,13 +55,13 @@ export default function Lobby() {
   }, [isConnected, token, logout]);
 
   const doLogin = async () => {
-    if (!isConnected) { setShowWalletModal(true); return; }
+    if (!isConnected) { openWalletModal(); return; }
     try {
       setIsLoggingIn(true);
-      setLoadingText(t('errors.networkRequired'));
+      setLoadingText('Switching to Avalanche...');
       try { await switchChain({ chainId: avalanche.id }); } catch (e) { setIsLoggingIn(false); return; }
 
-      setLoadingText('向伺服器請求安全授權碼...');
+      setLoadingText('Requesting auth code...');
       const walletAddr = address.toLowerCase();
       const nonceRes = await fetch(`${CONFIG.API_URL}/auth/request-nonce`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -69,20 +69,20 @@ export default function Lobby() {
       });
       const { nonce } = await nonceRes.json();
 
-      setLoadingText('請在錢包確認簽名...');
+      setLoadingText('Sign in wallet...');
       const signature = await signMessageAsync({ message: nonce });
 
-      setLoadingText('驗證簽名中...');
+      setLoadingText('Verifying...');
       const verifyRes = await fetch(`${CONFIG.API_URL}/auth/verify-signature`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ walletAddress: walletAddr, signature }),
       });
-      if (!verifyRes.ok) throw new Error('簽名驗證失敗');
+      if (!verifyRes.ok) throw new Error('Verification failed');
       const { token: jwtToken, user } = await verifyRes.json();
       setAuth(user.walletAddress, user.id, jwtToken);
     } catch (error) {
       alert(error.message?.includes('rejected') ? t('errors.signRejected') : t('errors.loginFailed'));
-    } finally { setIsLoggingIn(false); setShowWalletModal(false); }
+    } finally { setIsLoggingIn(false); }
   };
 
   const createRoom = async () => {
@@ -103,7 +103,7 @@ export default function Lobby() {
       }).filter(Boolean);
       const event = logs.find(l => l?.name === 'RoomCreated');
       const contractAddress = event?.args[0];
-      if (!contractAddress) throw new Error('無法取得合約地址');
+      if (!contractAddress) throw new Error('Failed to get contract address');
 
       useStore.getState().setPendingRoom({ roomId: newRoomId, contractAddress, settings: roomSettings });
       setShowSettingsModal(false);
@@ -158,10 +158,10 @@ export default function Lobby() {
                   </span>
                 </motion.div>
                 <LoginButton isConnected={isConnected} isLoggingIn={isLoggingIn} loadingText={loadingText}
-                  onConnect={() => setShowWalletModal(true)} onLogin={doLogin} onDisconnect={disconnect} />
+                  onConnect={() => openWalletModal()} onLogin={doLogin} onDisconnect={disconnect} />
               </div>
             ) : (
-              <LoginButton isConnected={false} onConnect={() => setShowWalletModal(true)} />
+              <LoginButton isConnected={false} onConnect={() => openWalletModal()} />
             )}
           </>
         ) : (
@@ -196,7 +196,6 @@ export default function Lobby() {
 
       <p className="z-10 text-neutral-700 text-xs mt-6">{t('app.footer')}</p>
 
-      <WalletModal show={showWalletModal} onClose={() => setShowWalletModal(false)} />
       <SettingsModal show={showSettingsModal} onClose={() => setShowSettingsModal(false)}
         settings={roomSettings} onChange={(patch) => setRoomSettings(s => ({ ...s, ...patch }))}
         onCreate={createRoom} isCreating={isCreatingRoom} />
