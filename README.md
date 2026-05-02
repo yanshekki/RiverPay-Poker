@@ -263,3 +263,27 @@ Solidity ^0.8.24 · Hardhat · OpenZeppelin (Clones, ECDSA, SafeERC20, Ownable)
 ## 📄 License
 
 MIT © RiverPay Poker
+
+---
+
+## 👨‍💻 About the Creator
+
+Built by **[Ki](https://linktr.ee/yanshekki)** — full-stack developer & Web3 builder.
+
+[![Linktree](https://img.shields.io/badge/linktr.ee-yanshekki-39E09B?logo=linktree&logoColor=white)](https://linktr.ee/yanshekki)
+
+### ☕ Support This Project
+
+If you find RiverPay Poker useful, consider buying me a coffee! ❤️
+
+<p align="center">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://linktr.ee/yanshekki" alt="Support QR" width="180" />
+</p>
+
+| Network | Address |
+|---------|---------|
+| **EVM** (Ethereum, Avalanche, BSC, Polygon...) | `yanshekki.eth` |
+| **NEAR** | `yanshekki.near` |
+| **Cardano (ADA)** | `$yanshekki` |
+
+> Every donation helps keep this project alive and evolving. Thank you! 🙏
