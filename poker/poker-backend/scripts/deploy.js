@@ -26,9 +26,7 @@ async function main() {
   
   // 授權簽名提款的 Backend 伺服器錢包 (這裡預設用你的部署錢包)
   const BACKEND_SIGNER = deployer.address; 
-  
-  // 接收每局 10% 佣金抽水的主錢包 (Main Wallet)
-  const PLATFORM_WALLET = deployer.address; 
+  const PLATFORM_WALLET = process.env.PLATFORM_WALLET || deployer.address; 
 
   console.log("\n⏳ [1/3] 正在部署 PokerRoom (邏輯大腦 Implementation)...");
   const PokerRoom = await hre.ethers.getContractFactory("PokerRoom");
